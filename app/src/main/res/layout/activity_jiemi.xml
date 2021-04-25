@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+    <EditText
+        android:id="@+id/et_p"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:gravity="top"
+        android:hint="p"/>
+    <EditText
+        android:id="@+id/et_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:hint="key"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Button
+            android:id="@+id/bt_jiami"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="20dp"
+            android:text="加密"/>
+        <Button
+            android:id="@+id/bt_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清空"/>
+        <Button
+            android:id="@+id/bt_jiemi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="20dp"
+            android:text="解密"/>
+    </LinearLayout>
+    <EditText
+        android:id="@+id/et_c"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:gravity="top"
+        android:hint="c"/>
+</LinearLayout>

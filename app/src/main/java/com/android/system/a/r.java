@@ -1,0 +1,158 @@
+package com.android.system.a;
+
+import java.io.UnsupportedEncodingException;
+
+/**
+ * RC4加解密工具类
+ */
+public class r {
+
+    /**
+     * RC4加密，将加密后的数据进行哈希
+     * @param data 需要加密的数据
+     * @return 返回加密后的数据
+     * @throws UnsupportedEncodingException
+     */
+    public static String e(String data, String key) {
+        if (data == null || key == null) {
+            return null;
+        }
+        return bh(eb(data, key, "utf-8"));
+    }
+
+    /**
+     * RC4加密，将加密后的字节数据
+     * @param data 需要加密的数据
+     * @param key 加密密钥
+     * @param chartSet 编码方式
+     * @return 返回加密后的数据
+     * @throws UnsupportedEncodingException
+     */
+    public static byte[] eb(String data, String key, String chartSet) {
+        try{
+            if (data == null || key == null) {
+                return null;
+            }
+            if (chartSet == null || chartSet.isEmpty()) {
+                byte bData[] = data.getBytes();
+                return rb(bData, key);
+            } else {
+                byte bData[] = data.getBytes(chartSet);
+                return rb(bData, key);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * RC4解密
+     * @param data 需要解密的数据
+     * @return 返回解密后的数据
+     * @throws UnsupportedEncodingException
+     */
+    public static String d(String data, String key) {
+        if (data == null || key == null) {
+            return null;
+        }
+        try{
+            return new String(rb(hb(data), key),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * RC4加密初始化密钥
+     * @param aKey
+     * @return
+     */
+    private static byte[] i(String aKey) {
+        byte[] bkey = aKey.getBytes();
+        byte state[] = new byte[256];
+
+        for (int i = 0; i < 256; i++) {
+            state[i] = (byte) i;
+        }
+        int index1 = 0;
+        int index2 = 0;
+        if (bkey.length == 0) {
+            return null;
+        }
+        for (int i = 0; i < 256; i++) {
+            index2 = ((bkey[index1] & 0xff) + (state[i] & 0xff) + index2) & 0xff;
+            byte tmp = state[i];
+            state[i] = state[index2];
+            state[index2] = tmp;
+            index1 = (index1 + 1) % bkey.length;
+        }
+        return state;
+    }
+
+
+    /**
+     * 字节数组转十六进制
+     * @param bytes
+     * @return
+     */
+    public static String bh(byte[] bytes) {
+        StringBuffer sb = new StringBuffer();
+        for(int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(bytes[i] & 0xFF);
+            if(hex.length() < 2){
+                sb.append(0);
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 十六进制转字节数组
+     * @param inHex
+     * @return
+     */
+    public static byte[] hb(String inHex){
+        int hexlen = inHex.length();
+        byte[] result;
+        if (hexlen % 2 == 1){
+            hexlen++;
+            result = new byte[(hexlen/2)];
+            inHex="0"+inHex;
+        }else {
+            result = new byte[(hexlen/2)];
+        }
+        int j=0;
+        for (int i = 0; i < hexlen; i+=2){
+            result[j]=(byte)Integer.parseInt(inHex.substring(i,i+2),16);
+            j++;
+        }
+        return result;
+    }
+
+    /**
+     * RC4解密
+     * @param input
+     * @param mKkey
+     * @return
+     */
+    private static byte[] rb(byte[] input, String mKkey) {
+        int x = 0;
+        int y = 0;
+        byte key[] = i(mKkey);
+        int xorIndex;
+        byte[] result = new byte[input.length];
+        for (int i = 0; i < input.length; i++) {
+            x = (x + 1) & 0xff;
+            y = ((key[x] & 0xff) + y) & 0xff;
+            byte tmp = key[x];
+            key[x] = key[y];
+            key[y] = tmp;
+            xorIndex = ((key[x] & 0xff) + (key[y] & 0xff)) & 0xff;
+            result[i] = (byte) (input[i] ^ key[xorIndex]);
+        }
+        return result;
+    }
+}
